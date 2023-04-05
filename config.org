@@ -20,6 +20,11 @@
   :ensure t)
 (use-package tree-sitter-langs
   :ensure t)
+(tree-sitter-require 'cpp)
+(tree-sitter-require 'c)
+(tree-sitter-require 'haskell)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 #+end_src
 ** better mx
 #+begin_src emacs-lisp
@@ -156,6 +161,7 @@
     (use-package lsp-haskell
     :ensure t) 
   (add-hook 'haskell-mode-hook #'lsp)
+
   (add-hook 'haskell-literate-mode-hook #'lsp)
   (use-package company
     :after lsp-mode
