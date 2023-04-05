@@ -80,17 +80,20 @@
 ** evil!
 #+begin_src emacs-lisp
 (use-package evil
+  :ensure t
   :init
   (setq evil-want-keybinding nil)
   (setq evil-vsplit-window-right t)
+  (setq evil-want-C-u-scroll t)
   (setq evil-split-window-below t)
   (evil-mode))
 (use-package evil-collection
   :after evil
+  :ensure t
   :config
-  (setq evil-collection-mode-list '(dashboard dired ibuffer))
   (evil-collection-init))
-(use-package evil-tutor)
+
+  (use-package evil-tutor)
 #+end_src
 ** projectile
 #+begin_src emacs-lisp
@@ -134,9 +137,47 @@
 
 * LSP
 #+begin_src emacs-lisp
-(use-package haskell-mode)
-(use-package lua-mode)
-(use-package markdown-mode)
+    (defun efs/lsp-mode-setup ()
+      (lsp-headerline-breadcrumb-mode))
+
+    (use-package lsp-mode
+      :commands (lsp lsp-deferred)
+      :hook (lsp-mode . efs/lsp-mode-setup)
+      :init
+      (setq lsp-keymap-prefix "C-c l"))  ;; Or 'C-l', 's-l')
+    (use-package lsp-ui
+      :hook (lsp-mode . lsp-ui-mode)
+      :custom
+      (lsp-ui-doc-position 'bottom))
+
+      (use-package haskell-mode)
+      (use-package lua-mode)
+      (use-package markdown-mode)
+    (use-package lsp-haskell
+    :ensure t) 
+  (add-hook 'haskell-mode-hook #'lsp)
+  (add-hook 'haskell-literate-mode-hook #'lsp)
+  (use-package company
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+         (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+    :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+   (use-package haskell-mode
+  :mode "\\.hs\\'"
+  :hook (haskell-mode . lsp-deferred)
+  :config
+  (setq haskell-indent-level 2))
+
+(use-package hindent
+  :ensure t)
+(add-hook 'haskell-mode-hook #'hindent-mode)
 #+end_src
 
 * Settings
@@ -237,7 +278,6 @@
   (global-display-line-numbers-mode))
 (setq display-line-numbers-type 'relative)
 		      (setq confirm-kill-emacs 'y-or-n-p)
-		    (setq confirm-kill-emacs 'yes-or-n-p)
 (setq make-backup-files nil)
 (setq doom-themes-enable-bold t
 	doom-themes-enable-italic t)
