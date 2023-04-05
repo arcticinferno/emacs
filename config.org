@@ -14,6 +14,28 @@
   (setq use-package-always-ensure t
         use-package-expand-minimally t))
 #+end_src
+** Haskell - V1
+#+begin_src
+(use-package dante
+  :ensure t ; ask use-package to install the package
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  ;; flycheck backend deprecated October 2022
+  ;; (add-hook 'haskell-mode-hook 'flycheck-mode)
+
+  (add-hook 'haskell-mode-hook 'flymake-mode)
+  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  (add-hook 'haskell-mode-hook
+            (defun my-fix-hs-eldoc ()
+              (setq eldoc-documentation-strategy #'eldoc-documentation-default)))
+  :config
+  (require 'flymake-flycheck)
+  (defalias 'flymake-hlint
+    (flymake-flycheck-diagnostic-function-for 'haskell-hlint))
+  (add-to-list 'flymake-diagnostic-functions 'flymake-hlint))
+#+end_src
 ** Treesitter
 #+begin_src emacs-lisp
 (use-package tree-sitter
@@ -158,8 +180,6 @@
 
         (use-package lua-mode)
         (use-package markdown-mode)
-      (use-package lsp-haskell
-      :ensure t) 
     (add-hook 'haskell-mode-hook #'lsp)
     (add-hook 'haskell-literate-mode-hook #'lsp)
     (use-package company
@@ -272,7 +292,7 @@
 	   "f R"   '(rename-file :which-key "Rename file")
 	   "f S"   '(write-file :which-key "Save file as...")
 	   "f U"   '(sudo-edit :which-key "Sudo edit file"))
-    (global-set-key (kbd "C-c") '(kbd "C-g"))
+    (global-set-key (kbd "C-c") (kbd "C-g"))
   (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
   (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
 
@@ -293,7 +313,7 @@
               (setq warning-minimum-level :emergency)
                 (setq auto-save-default nil)
                 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
-              (setq-default indent-tabs-mode nil)
+              (setq-default indent-tabs-mode t)
               (setq-default tab-width 4)
               (setq indent-line-function 'insert-tab)
             (setq doom-modeline-time-icon t)
