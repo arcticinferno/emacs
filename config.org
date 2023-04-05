@@ -177,7 +177,7 @@
         :hook (lsp-mode . lsp-ui-mode)
         :custom
         (lsp-ui-doc-position 'bottom))
-
+	(use-package lsp-haskell)
         (use-package lua-mode)
         (use-package markdown-mode)
     (add-hook 'haskell-mode-hook #'lsp)
