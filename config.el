@@ -8,6 +8,10 @@
   (package-install 'use-package))
 (setq use-package-always-ensure t)
 
+(use-package projectile
+  :config
+  (projectile-global-mode 1))
+
 (use-package all-the-icons)
 
 (use-package dashboard
@@ -16,11 +20,10 @@
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "MS notepad: the ultimate editor")
   (setq dashboard-startup-banner "~/.config/emacs/logo.png")
-  (setq dashboard-center-content nil)
+  (setq dashboard-center-content t) ;; Center
   (setq dashboard-items '((recents . 5)
                           (agenda . 5 )
                           (bookmarks . 3)
-                          (projects . 3)
                           (registers . 3)))
   :config
   (dashboard-setup-startup-hook)
