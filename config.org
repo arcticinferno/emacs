@@ -15,7 +15,7 @@
         use-package-expand-minimally t))
 #+end_src
 ** Haskell - V1
-#+begin_src
+#+begin_src emacs-lisp
 (use-package dante
   :ensure t ; ask use-package to install the package
   :after haskell-mode
